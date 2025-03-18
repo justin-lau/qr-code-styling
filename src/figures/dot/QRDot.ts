@@ -33,7 +33,12 @@ export default class QRDot {
       case dotTypes.extraRounded:
         drawFunction = this._drawExtraRounded;
         break;
+      case dotTypes.heart:
+        drawFunction = this._drawHeart;
+        break;
       case dotTypes.square:
+        drawFunction = this._drawSquare;
+        break;
       default:
         drawFunction = this._drawSquare;
     }
@@ -313,5 +318,23 @@ export default class QRDot {
     }
 
     this._basicSquare({ x, y, size, rotation: 0 });
+  }
+
+  _drawHeart({ x, y, size }: DrawArgs): void {
+    const slimFactor = 0.9; // 5% slimmer on each side
+    this._rotateFigure({
+      x,
+      y,
+      size,
+      rotation: 0,
+      draw: () => {
+        this._element = this._window.document.createElementNS("http://www.w3.org/2000/svg", "path");
+        const d =
+          `M ${x + size / 2} ${y + size / 6}` +
+          `C ${x + size * slimFactor} ${y - size / 6}, ${x + size * 1.5 * slimFactor} ${y + size / 2}, ${x + size / 2} ${y + size}` +
+          `C ${x - (size / 2) * slimFactor} ${y + size / 2}, ${x + (size * (1 - slimFactor)) / 2} ${y - size / 6}, ${x + size / 2} ${y + size / 6}`;
+        this._element.setAttribute("d", d);
+      }
+    });
   }
 }
